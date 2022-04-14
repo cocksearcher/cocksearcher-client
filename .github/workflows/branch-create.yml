@@ -2,7 +2,11 @@ name: Create Branch by Issue
 
 on:
   issues:
-    types: [ opened ]
+    types: [ assigned ]
+
+  issue_comment:
+    types: [ created ]
+  
   pull_request:
     types: [ closed ]
 
