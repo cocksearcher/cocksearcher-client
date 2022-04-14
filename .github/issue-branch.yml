@@ -1,5 +1,5 @@
-mod: chatops
 branchName: '${issue.number}-${issue.title}'
+commentMessage: 'Branch ${branchName} created!'
 branches:
   - label:
       - "프로젝트 세팅"
