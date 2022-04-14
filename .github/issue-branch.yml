@@ -1,4 +1,4 @@
-branchName: '${issue.number}-${issue.title}'
+branchName: '${issue.number}_${issue.title}'
 branches:
   - label:
     - 프로젝트 세팅
