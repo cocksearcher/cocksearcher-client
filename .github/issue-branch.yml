@@ -1,8 +1,8 @@
-branchName: '${issue.number}_${issue.title}'
+branchName: '${issue.number}-${issue.title}'
 branches:
   - label:
-    - 프로젝트 세팅
-    - 기능 개발
+      - 프로젝트 세팅
+      - 기능 개발
     prefix: feature/
     prTarget: feature
 
