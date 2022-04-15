@@ -1,7 +1,11 @@
 branchName: '${issue.number}_${issue.title}'
 commentMessage: 'Branch ${branchName} created!'
 branches:
-  - label: [setting, feature]
+  - label: setting
+    prefix: feature/
+    prTarget: feature
+    
+  - label: feature
     prefix: feature/
     prTarget: feature
 
