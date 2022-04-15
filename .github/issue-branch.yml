@@ -2,8 +2,8 @@ branchName: '${issue.number}_${issue.title}'
 commentMessage: 'Branch ${branchName} created!'
 branches:
   - label:
-      - "프로젝트 세팅"
-      - "기능 개발"
+      - setting
+      - feature
     prefix: feature/
     prTarget: feature
 
