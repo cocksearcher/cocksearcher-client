@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -20,11 +21,13 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.font.FontWeight.Companion.W400
 import androidx.compose.ui.text.font.FontWeight.Companion.W500
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.cocksearcher.cocksearcher_client.R
+import kotlin.math.ceil
 
 @Composable
 fun Main(
@@ -36,7 +39,6 @@ fun Main(
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        val state = 0
         TodayCocktailText()
         TodayCocktail()
         PopularCocktailText()
@@ -45,7 +47,7 @@ fun Main(
         IngredientsLazy()
         CategoryText()
         CateGory()
-        CocktailLazy(arrayListOf("1", "1", "1", "", "", ""), state)
+        CocktailLazy()
     }
 }
 
@@ -392,7 +394,8 @@ fun CateGory() {
 }
 
 @Composable
-fun CocktailImages(url: String, size: Float) {
+fun CocktailImages() {
+
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data("https://images.unsplash.com/photo-1628373383885-4be0bc0172fa?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1301&q=80")
@@ -401,31 +404,21 @@ fun CocktailImages(url: String, size: Float) {
         placeholder = painterResource(R.drawable.ic_launcher_foreground),
         contentDescription = "",
         contentScale = ContentScale.Crop,
-        modifier = if (size == 1f) {
-            Modifier
-                .fillMaxWidth(size)
-                .wrapContentHeight()
-        } else {
-            Modifier
-                .padding(end = 16.dp)
-                .fillMaxWidth(size)
-                .wrapContentHeight()
-        }
+        modifier =
+        Modifier.wrapContentHeight().padding(end = 16.dp, bottom = 16.dp)
     )
 }
 
 
 @Composable
-fun CocktailLazy(data: ArrayList<String>, state: Int) {
-    Column(modifier = Modifier.padding(top = 16.dp)) {
-        for (i in 1..data.size step 2) {
-            Row(Modifier.padding(end = 16.dp, bottom = 16.dp)) {
-                CocktailImages(url = "", 0.5f)
-                CocktailImages(url = "", 1f)
-                Spacer(modifier = Modifier)
-            }
-        }
-
+fun CocktailLazy() {
+    StaggeredVerticalGrid(maxColumnWidth = 350.dp) {
+            CocktailImages()
+            CocktailImages()
+            CocktailImages()
+            CocktailImages()
+            CocktailImages()
+            CocktailImages()
     }
 }
 
@@ -434,4 +427,59 @@ fun CocktailLazy(data: ArrayList<String>, state: Int) {
 @Composable
 fun Test() {
     Main()
+}
+
+@Composable
+fun StaggeredVerticalGrid(
+    modifier: Modifier = Modifier,
+    maxColumnWidth: Dp,
+    children: @Composable () -> Unit
+) {
+    Layout(
+        modifier = modifier.padding(top = 16.dp),
+        content = children
+    ) { measurables, constraints ->
+        check(constraints.hasBoundedWidth) {
+            "Unbounded width not supported"
+        }
+        val columns = ceil(constraints.maxWidth / maxColumnWidth.toPx()).toInt()
+        val columnWidth = constraints.maxWidth / columns
+        val itemConstraints = constraints.copy(maxWidth = columnWidth)
+        val colHeights = IntArray(columns) { 0 } // track each column's height
+        val placeables = measurables.map { measurable ->
+            val column = shortestColumn(colHeights)
+            val placeable = measurable.measure(itemConstraints)
+            colHeights[column] += placeable.height
+            placeable
+        }
+
+        val height = colHeights.maxOrNull()?.coerceIn(constraints.minHeight, constraints.maxHeight)
+            ?: constraints.minHeight
+        layout(
+            width = constraints.maxWidth,
+            height = height
+        ) {
+            val colY = IntArray(columns) { 0 }
+            placeables.forEach { placeable ->
+                val column = shortestColumn(colY)
+                placeable.place(
+                    x = columnWidth * column,
+                    y = colY[column]
+                )
+                colY[column] += placeable.height
+            }
+        }
+    }
+}
+
+private fun shortestColumn(colHeights: IntArray): Int {
+    var minHeight = Int.MAX_VALUE
+    var column = 0
+    colHeights.forEachIndexed { index, height ->
+        if (height < minHeight) {
+            minHeight = height
+            column = index
+        }
+    }
+    return column
 }

@@ -58,13 +58,16 @@ android {
 
 dependencies {
 
-    implementation (Libraries.Activity.core)
-    implementation (Libraries.Compose.composeUi)
-    implementation (Libraries.Compose.composeMaterial)
-    implementation (Libraries.Compose.composePreview)
-    implementation (Libraries.LifeCycle.runTime)
-    implementation (Libraries.Compose.composeActivity)
+    implementation(Libraries.Activity.core)
+    implementation(Libraries.Compose.composeUi)
+    implementation(Libraries.Compose.composeMaterial)
+    implementation(Libraries.Compose.composePreview)
+    implementation(Libraries.LifeCycle.runTime)
+    implementation(Libraries.Compose.composeConstraint)
+    implementation(Libraries.Compose.composeActivity)
     implementation(Libraries.Compose.composeUiUtil)
+    implementation(Libraries.Compose.composeLayout)
+    implementation(Libraries.Compose.composeFoundation)
     kapt(Libraries.Compose.composeCompiler)
     debugImplementation(Libraries.Compose.composeUiTooling)
     implementation(Libraries.Hilt.hilt)

@@ -15,6 +15,10 @@ object Libraries {
         const val composeRuntime = "androidx.compose.runtime:runtime:${Versions.compose}"
         const val composeLiveData = "androidx.compose.runtime:runtime-livedata:${Versions.compose}"
         const val composePreview = "androidx.compose.ui:ui-tooling-preview:${Versions.compose}"
+        const val composeLayout = "androidx.compose.foundation:foundation-layout:${Versions.compose}"
+        const val composeFoundation = "androidx.compose.foundation:foundation:${Versions.compose}"
+
+
     }
 
     object Activity{
